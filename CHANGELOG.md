@@ -1,3 +1,68 @@
+## 7.3.5 "asphalt-lightning" (2019-03-18)
+
+
+### Bug Fixes
+
+* **schematics:** do not run migrations multiple times ([#15424](https://github.com/angular/material2/issues/15424)) ([7b77740](https://github.com/angular/material2/commit/7b77740))
+* **stepper:** avoid breaking change in stepControl type ([#15464](https://github.com/angular/material2/issues/15464)) ([f02ebe1](https://github.com/angular/material2/commit/f02ebe1)), closes [#15134](https://github.com/angular/material2/issues/15134) [#15462](https://github.com/angular/material2/issues/15462)
+
+
+
+## 7.3.4 "tapioca-turtle" (2019-03-11)
+
+
+### Bug Fixes
+
+* **badge:** duplicate leftover badge after server-side render ([#15417](https://github.com/angular/material2/issues/15417)) ([815a729](https://github.com/angular/material2/commit/815a729))
+* **calendar:** should markForCheck when properties are changed ([#15102](https://github.com/angular/material2/issues/15102)) ([4aa5535](https://github.com/angular/material2/commit/4aa5535))
+* **datepicker:** toggle throwing an error if datepicker is not defined on init ([#15256](https://github.com/angular/material2/issues/15256)) ([3c5e671](https://github.com/angular/material2/commit/3c5e671))
+* **form-field:** allow user to click through arrow on native select ([#15328](https://github.com/angular/material2/issues/15328)) ([cb057d2](https://github.com/angular/material2/commit/cb057d2)), closes [#15318](https://github.com/angular/material2/issues/15318)
+* **form-field:** infinite loop with zone-patch-rxjs ([#15335](https://github.com/angular/material2/issues/15335)) ([8581556](https://github.com/angular/material2/commit/8581556)), closes [#15331](https://github.com/angular/material2/issues/15331)
+* **list:** action list missing focus and hover styling ([#14147](https://github.com/angular/material2/issues/14147)) ([3f876e2](https://github.com/angular/material2/commit/3f876e2))
+* **list:** override native button text align in action list ([#15404](https://github.com/angular/material2/issues/15404)) ([aaec2d5](https://github.com/angular/material2/commit/aaec2d5))
+* **radio:** ng-touched incorrectly being set on click ([#12560](https://github.com/angular/material2/issues/12560)) ([5b04ec3](https://github.com/angular/material2/commit/5b04ec3))
+* **radio:** only show focus ripple for keyboard focus ([#13565](https://github.com/angular/material2/issues/13565)) ([87477c3](https://github.com/angular/material2/commit/87477c3)), closes [#13544](https://github.com/angular/material2/issues/13544)
+* **radio:** unable to distinguish disabled radio button in high contrast mode ([#15375](https://github.com/angular/material2/issues/15375)) ([230b1ed](https://github.com/angular/material2/commit/230b1ed))
+* **schematics:** incorrectly throws if NgModule uses namespaced decorator ([#15298](https://github.com/angular/material2/issues/15298)) ([89c48f4](https://github.com/angular/material2/commit/89c48f4))
+* **scrolling:** virtual scroll viewport error during server-side rendering ([#15299](https://github.com/angular/material2/issues/15299)) ([78e7207](https://github.com/angular/material2/commit/78e7207)), closes [#15291](https://github.com/angular/material2/issues/15291)
+* **select:** Fixes width-issue of select option panel in IE ([#11801](https://github.com/angular/material2/issues/11801)) ([81a73c6](https://github.com/angular/material2/commit/81a73c6)), closes [#11609](https://github.com/angular/material2/issues/11609)
+* **sort:** remove arrow when sort header is disabled ([#15212](https://github.com/angular/material2/issues/15212)) ([4a7fdfe](https://github.com/angular/material2/commit/4a7fdfe)), closes [#14986](https://github.com/angular/material2/issues/14986)
+* **stepper:** unable to tab to step content ([#14892](https://github.com/angular/material2/issues/14892)) ([824aad2](https://github.com/angular/material2/commit/824aad2))
+* **tabs:** correct example title ([#15325](https://github.com/angular/material2/issues/15325)) ([f1ca6ff](https://github.com/angular/material2/commit/f1ca6ff))
+* **virtual-scroll:** move views that are already attached instead of inserting ([#15348](https://github.com/angular/material2/issues/15348)) ([8dc572d](https://github.com/angular/material2/commit/8dc572d))
+
+
+
+## 7.3.3 "cashmere-armor" (2019-02-20)
+
+
+### Bug Fixes
+
+* **theming**: fix errors when building theme using CSS variables ([#15140](https://github.com/angular/material2/issues/15140)) ([96f6e06](https://github.com/angular/material2/commit/96f6e06)), closes [#15107](https://github.com/angular/material2/issues/15107)
+* **bidi:** handle uppercase values correctly ([#14773](https://github.com/angular/material2/issues/14773)) ([0029cde](https://github.com/angular/material2/commit/0029cde))
+* **dialog:** don't assign aria-label to close button if button has text ([#11093](https://github.com/angular/material2/issues/11093)) ([9bf368d](https://github.com/angular/material2/commit/9bf368d)), closes [#11084](https://github.com/angular/material2/issues/11084)
+* **list:** disableRipple on selection list not affecting list options after init ([#14858](https://github.com/angular/material2/issues/14858)) ([edf4541](https://github.com/angular/material2/commit/edf4541))
+* **schematics:** do not generate invalid stylesheet files ([#15235](https://github.com/angular/material2/issues/15235)) ([e7422e4](https://github.com/angular/material2/commit/e7422e4)), closes [#15164](https://github.com/angular/material2/issues/15164)
+* **table:** add missing rowgroup roles ([#15131](https://github.com/angular/material2/issues/15131)) ([2c7bc1c](https://github.com/angular/material2/commit/2c7bc1c))
+
+
+
+## 7.3.2 "jute-box" (2019-02-11)
+
+
+### Bug Fixes
+
+* **autocomplete:** set aria-haspopup ([#15079](https://github.com/angular/material2/issues/15079)) ([45bd5d4](https://github.com/angular/material2/commit/45bd5d4))
+* **checkbox:** unable to click to select if text is marked ([#15062](https://github.com/angular/material2/issues/15062)) ([4819c5b](https://github.com/angular/material2/commit/4819c5b)), closes [#14967](https://github.com/angular/material2/issues/14967)
+* **drag-drop:** set class when item or list is disabled ([#14769](https://github.com/angular/material2/issues/14769)) ([c543cf6](https://github.com/angular/material2/commit/c543cf6)), closes [#14760](https://github.com/angular/material2/issues/14760)
+* **drag-drop:** standalone draggable drag class not being applied with OnPush change detection ([#14727](https://github.com/angular/material2/issues/14727)) ([2f63195](https://github.com/angular/material2/commit/2f63195))
+* **icon:** add notranslate class ([#14889](https://github.com/angular/material2/issues/14889)) ([39fa928](https://github.com/angular/material2/commit/39fa928))
+* **menu:** prevent removal of mat-elevation class ([#15035](https://github.com/angular/material2/issues/15035)) ([8069641](https://github.com/angular/material2/commit/8069641))
+* **slide-toggle:** input element should use switch role ([#15073](https://github.com/angular/material2/issues/15073)) ([3af7748](https://github.com/angular/material2/commit/3af7748)), closes [#14949](https://github.com/angular/material2/issues/14949)
+* **tree:** opposite direction padding not being reset on change ([#14816](https://github.com/angular/material2/issues/14816)) ([ae4a5ae](https://github.com/angular/material2/commit/ae4a5ae))
+
+
+
 ## 7.3.1 "liquidcrystal-sandwich" (2019-02-04)
 
 

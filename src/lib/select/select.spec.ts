@@ -383,6 +383,21 @@ describe('MatSelect', () => {
           flush();
         })));
 
+        it('should not throw when reaching a reset option using the arrow keys on a closed select',
+           fakeAsync(() => {
+             fixture.componentInstance.foods =
+                 [{value: 'steak-0', viewValue: 'Steak'}, {value: null, viewValue: 'None'}];
+             fixture.detectChanges();
+             fixture.componentInstance.control.setValue('steak-0');
+
+             expect(() => {
+               dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+               fixture.detectChanges();
+             }).not.toThrow();
+
+             flush();
+           }));
+
         it('should open a single-selection select using ALT + DOWN_ARROW', fakeAsync(() => {
           const {control: formControl, select: selectInstance} = fixture.componentInstance;
 
@@ -1004,6 +1019,50 @@ describe('MatSelect', () => {
 
         const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
         expect(pane.style.minWidth).toBe('200px');
+
+        const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel');
+        const scrollContainerWidth = scrollContainer!.getBoundingClientRect().width;
+        expect(scrollContainerWidth).toBeCloseTo(200 + 32, 0,
+            'Expected select panel width to be 100% + 32px of the select field trigger');
+      }));
+
+      it('should set the width of the overlay based on a larger trigger width',
+        fakeAsync(() => {
+            // the trigger width exceeds the minimum width of the mat-select-panel
+          trigger.style.width = '400px';
+
+          trigger.click();
+          fixture.detectChanges();
+          flush();
+
+          const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+          expect(pane.style.minWidth).toBe('400px');
+
+          const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel');
+          const scrollContainerWidth = scrollContainer!.getBoundingClientRect().width;
+          expect(scrollContainerWidth).toBeCloseTo(400 + 32, 0,
+              'Expected select panel width to be 100% + 32px of the select field trigger');
+      }));
+
+      it('should update the width of the panel on resize', fakeAsync(() => {
+        trigger.style.width = '300px';
+
+        trigger.click();
+        fixture.detectChanges();
+        flush();
+
+        const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+        const initialWidth = parseInt(pane.style.minWidth || '0');
+
+        expect(initialWidth).toBeGreaterThan(0);
+
+        trigger.style.width = '400px';
+        dispatchFakeEvent(window, 'resize');
+        fixture.detectChanges();
+        tick(1000);
+        fixture.detectChanges();
+
+        expect(parseInt(pane.style.minWidth || '0')).toBeGreaterThan(initialWidth);
       }));
 
       it('should not attempt to open a select that does not have any options', fakeAsync(() => {
@@ -1759,6 +1818,7 @@ describe('MatSelect', () => {
         fixture.componentInstance.select.open();
         fixture.detectChanges();
         flush();
+        fixture.detectChanges();
 
         host = fixture.debugElement.query(By.css('mat-select')).nativeElement;
         panel = overlayContainerElement.querySelector('.mat-select-panel')! as HTMLElement;
@@ -1821,7 +1881,7 @@ describe('MatSelect', () => {
         expect(panel.scrollTop).toBe(320, 'Expected scroll to be at the 9th option.');
       }));
 
-      it('should scroll top the top when pressing HOME', fakeAsync(() => {
+      it('should scroll to the top when pressing HOME', fakeAsync(() => {
         for (let i = 0; i < 20; i++) {
           dispatchKeyboardEvent(host, 'keydown', DOWN_ARROW);
           fixture.detectChanges();
@@ -3110,6 +3170,7 @@ describe('MatSelect', () => {
 
         checkTriggerAlignedWithOption(7, groupFixture.componentInstance.select);
       }));
+
     });
 
     describe('limited space to open vertically', () => {
@@ -4172,7 +4233,7 @@ class BasicSelect {
   panelClass = ['custom-one', 'custom-two'];
   disableRipple: boolean;
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect, {static: true}) select: MatSelect;
   @ViewChildren(MatOption) options: QueryList<MatOption>;
 }
 
@@ -4326,7 +4387,7 @@ class CustomSelectAccessor implements ControlValueAccessor {
 })
 class CompWithCustomSelect {
   ctrl = new FormControl('initial value');
-  @ViewChild(CustomSelectAccessor) customAccessor: CustomSelectAccessor;
+  @ViewChild(CustomSelectAccessor, {static: true}) customAccessor: CustomSelectAccessor;
 }
 
 @Component({

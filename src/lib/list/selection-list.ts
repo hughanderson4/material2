@@ -38,12 +38,15 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
+  SimpleChanges,
+  OnChanges,
 } from '@angular/core';
 import {
   CanDisableRipple, CanDisableRippleCtor,
   MatLine,
   setLines,
   mixinDisableRipple,
+  ThemePalette,
 } from '@angular/material/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {Subscription} from 'rxjs';
@@ -95,6 +98,11 @@ export class MatSelectionListChange {
     'tabindex': '-1',
     '[class.mat-list-item-disabled]': 'disabled',
     '[class.mat-list-item-with-avatar]': '_avatar || _icon',
+    // Manually set the "primary" or "warn" class if the color has been explicitly
+    // set to "primary" or "warn". The pseudo checkbox picks up these classes for
+    // its theme. The accent theme palette is the default and doesn't need to be set.
+    '[class.mat-primary]': 'color === "primary"',
+    '[class.mat-warn]': 'color === "warn"',
     '[attr.aria-selected]': 'selected.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
   },
@@ -118,6 +126,12 @@ export class MatListOption extends _MatListOptionMixinBase
 
   /** Whether the label should appear before or after the checkbox. Defaults to 'after' */
   @Input() checkboxPosition: 'before' | 'after' = 'after';
+
+  /** Theme color of the list option. This sets the color of the checkbox. */
+  @Input()
+  get color(): ThemePalette { return this._color || this.selectionList.color; }
+  set color(newValue: ThemePalette) { this._color = newValue; }
+  private _color: ThemePalette;
 
   /** Value of the option */
   @Input()
@@ -286,7 +300,6 @@ export class MatListOption extends _MatListOptionMixinBase
     'role': 'listbox',
     '[tabIndex]': 'tabIndex',
     'class': 'mat-selection-list mat-list-base',
-    '(focus)': 'focus()',
     '(blur)': '_onTouched()',
     '(keydown)': '_keydown($event)',
     'aria-multiselectable': 'true',
@@ -299,7 +312,7 @@ export class MatListOption extends _MatListOptionMixinBase
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatSelectionList extends _MatSelectionListMixinBase implements FocusableOption,
-    CanDisableRipple, AfterContentInit, ControlValueAccessor, OnDestroy {
+    CanDisableRipple, AfterContentInit, ControlValueAccessor, OnDestroy, OnChanges {
 
   /** The FocusKeyManager which handles focus. */
   _keyManager: FocusKeyManager<MatListOption>;
@@ -313,6 +326,9 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
 
   /** Tabindex of the selection list. */
   @Input() tabIndex: number = 0;
+
+  /** Theme color of the selection list. This sets the checkbox color for all list options. */
+  @Input() color: ThemePalette = 'accent';
 
   /**
    * Function used for comparing an option against the selected value when determining which
@@ -331,9 +347,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
     // strategy. Therefore the options will not check for any changes if the `MatSelectionList`
     // changed its state. Since we know that a change to `disabled` property of the list affects
     // the state of the options, we manually mark each option for check.
-    if (this.options) {
-      this.options.forEach(option => option._markForCheck());
-    }
+    this._markOptionsForCheck();
   }
   private _disabled: boolean = false;
 
@@ -387,11 +401,21 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
     });
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    const disableRippleChanges = changes.disableRipple;
+    const colorChanges = changes.color;
+
+    if ((disableRippleChanges && !disableRippleChanges.firstChange) ||
+        (colorChanges && !colorChanges.firstChange)) {
+      this._markOptionsForCheck();
+    }
+  }
+
   ngOnDestroy() {
     this._modelChanges.unsubscribe();
   }
 
-  /** Focuses the last active list option. */
+  /** Focuses the selection list. */
   focus() {
     this._element.nativeElement.focus();
   }
@@ -408,7 +432,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
 
   /** Sets the focused option of the selection-list. */
   _setFocusedOption(option: MatListOption) {
-    this._keyManager.updateActiveItemIndex(this._getOptionIndex(option));
+    this._keyManager.updateActiveItem(option);
   }
 
   /**
@@ -421,9 +445,9 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
     if (optionIndex > -1 && this._keyManager.activeItemIndex === optionIndex) {
       // Check whether the option is the last item
       if (optionIndex > 0) {
-        this._keyManager.updateActiveItemIndex(optionIndex - 1);
+        this._keyManager.updateActiveItem(optionIndex - 1);
       } else if (optionIndex === 0 && this.options.length > 1) {
-        this._keyManager.updateActiveItemIndex(Math.min(optionIndex + 1, this.options.length - 1));
+        this._keyManager.updateActiveItem(Math.min(optionIndex + 1, this.options.length - 1));
       }
     }
 
@@ -580,5 +604,12 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   /** Returns the index of the specified list option. */
   private _getOptionIndex(option: MatListOption): number {
     return this.options.toArray().indexOf(option);
+  }
+
+  /** Marks all the options to be checked in the next change detection run. */
+  private _markOptionsForCheck() {
+    if (this.options) {
+      this.options.forEach(option => option._markForCheck());
+    }
   }
 }

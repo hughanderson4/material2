@@ -7,7 +7,12 @@ import {checkReleaseOutput} from './check-release-output';
 import {extractReleaseNotes} from './extract-release-notes';
 import {GitClient} from './git/git-client';
 import {getGithubNewReleaseUrl} from './git/github-urls';
-import {isNpmAuthenticated, runInteractiveNpmLogin, runNpmPublish} from './npm/npm-client';
+import {
+  isNpmAuthenticated,
+  npmLogout,
+  npmLoginInteractive,
+  npmPublish,
+} from './npm/npm-client';
 import {promptForNpmDistTag} from './prompt/npm-dist-tag-prompt';
 import {promptForUpstreamRemote} from './prompt/upstream-remote-prompt';
 import {releasePackages} from './release-output/release-packages';
@@ -121,10 +126,22 @@ class PublishReleaseTask extends BaseReleaseTask {
       repository: this.repositoryName,
       tagName: newVersionName,
       releaseTitle: releaseTitle,
+      // TODO: we cannot insert the real changelog here since the URL would become
+      // way too large and Github would consider this as a malformed page request.
+      body: 'Copy-paste changelog in here!'
     });
 
     console.log();
     console.info(green(bold(`  ✓   Published all packages successfully`)));
+
+    // Always log out of npm after releasing to prevent unintentional changes to
+    // any packages.
+    if (npmLogout()) {
+      console.info(green(`  ✓   Logged out of npm`));
+    } else {
+      console.error(red(`  ✘   Could not log out of NPM. Please manually log out!`));
+    }
+
     console.info(yellow(`  ⚠   Please draft a new release of the version on Github.`));
     console.info(yellow(`      ${newReleaseUrl}`));
   }
@@ -194,7 +211,7 @@ class PublishReleaseTask extends BaseReleaseTask {
     console.log(yellow(`  ⚠   NPM is currently not authenticated. Running "npm login"..`));
 
     for (let i = 0;  i < MAX_NPM_LOGIN_TRIES; i++) {
-      if (runInteractiveNpmLogin()) {
+      if (npmLoginInteractive()) {
         // In case the user was able to login properly, we want to exit the loop as we
         // don't need to ask for authentication again.
         break;
@@ -217,7 +234,7 @@ class PublishReleaseTask extends BaseReleaseTask {
   private publishPackageToNpm(packageName: string, npmDistTag: string) {
     console.info(green(`  ⭮   Publishing "${packageName}"..`));
 
-    const errorOutput = runNpmPublish(join(this.releaseOutputPath, packageName), npmDistTag);
+    const errorOutput = npmPublish(join(this.releaseOutputPath, packageName), npmDistTag);
 
     if (errorOutput) {
       console.error(red(`  ✘   An error occurred while publishing "${packageName}".`));

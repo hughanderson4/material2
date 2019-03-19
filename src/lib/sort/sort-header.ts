@@ -369,4 +369,9 @@ class MultiSortStrategy implements SortHeaderStrategy {
 
     return getSortCounter(index, sortHeader.active.length);
   }
+
+  /** Whether the arrow inside the sort header should be rendered. */
+  _renderArrow() {
+    return !this._isDisabled() || this._isSorted();
+  }
 }
