@@ -1,5 +1,5 @@
 import {DataSource} from '@angular/cdk/collections';
-import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {
   async,
   ComponentFixture,
@@ -180,14 +180,14 @@ describe('MatTable', () => {
     let dataSource: MatTableDataSource<TestData>;
     let component: ArrayDataSourceMatTableApp;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
       fixture = TestBed.createComponent(ArrayDataSourceMatTableApp);
       fixture.detectChanges();
 
       tableElement = fixture.nativeElement.querySelector('.mat-table');
       component = fixture.componentInstance;
       dataSource = fixture.componentInstance.dataSource;
-    }));
+    });
 
     it('should create table and display data source contents', () => {
       expectTableToMatchContent(tableElement, [
@@ -225,33 +225,6 @@ describe('MatTable', () => {
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
     });
-
-    it('should update the page index when switching to a smaller data set from a page',
-      fakeAsync(() => {
-        // Add 20 rows so we can switch pages.
-        for (let i = 0; i < 20; i++) {
-          component.underlyingDataSource.addData();
-          fixture.detectChanges();
-          tick();
-          fixture.detectChanges();
-        }
-
-        // Go to the last page.
-        fixture.componentInstance.paginator.lastPage();
-        fixture.detectChanges();
-
-        // Switch to a smaller data set.
-        dataSource.data = [{a: 'a_0', b: 'b_0', c: 'c_0'}];
-        fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
-
-        expectTableToMatchContent(tableElement, [
-          ['Column A', 'Column B', 'Column C'],
-          ['a_0', 'b_0', 'c_0'],
-          ['Footer A', 'Footer B', 'Footer C'],
-        ]);
-      }));
 
     it('should be able to filter the table contents', fakeAsync(() => {
       // Change filter to a_1, should match one row
@@ -594,7 +567,7 @@ class MatTableApp {
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   isFourthRow = (i: number, _rowData: TestData) => i == 3;
 
-  @ViewChild(MatTable, {static: true}) table: MatTable<TestData>;
+  @ViewChild(MatTable) table: MatTable<TestData>;
 }
 
 @Component({
@@ -624,7 +597,7 @@ class NativeHtmlTableApp {
   dataSource: FakeDataSource | null = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(MatTable, {static: true}) table: MatTable<TestData>;
+  @ViewChild(MatTable) table: MatTable<TestData>;
 }
 
 @Component({
@@ -644,7 +617,7 @@ class StickyTableApp {
   dataSource = new FakeDataSource();
   columnsToRender = ['column_a'];
 
-  @ViewChild(MatTable, {static: true}) table: MatTable<TestData>;
+  @ViewChild(MatTable) table: MatTable<TestData>;
 }
 
 
@@ -706,14 +679,14 @@ class MatTableWithWhenRowApp {
     <mat-paginator [pageSize]="5"></mat-paginator>
   `
 })
-class ArrayDataSourceMatTableApp implements AfterViewInit {
+class ArrayDataSourceMatTableApp implements OnInit {
   underlyingDataSource = new FakeDataSource();
   dataSource = new MatTableDataSource<TestData>();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(MatTable, {static: true}) table: MatTable<TestData>;
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatTable) table: MatTable<TestData>;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatSortHeader) sortHeader: MatSortHeader;
 
   constructor() {
@@ -729,9 +702,9 @@ class ArrayDataSourceMatTableApp implements AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+  ngOnInit() {
+    this.dataSource!.sort = this.sort;
+    this.dataSource!.paginator = this.paginator;
   }
 }
 
@@ -764,8 +737,8 @@ class MatTableWithSortApp implements OnInit {
   dataSource = new MatTableDataSource<TestData>();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(MatTable, {static: true}) table: MatTable<TestData>;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatTable) table: MatTable<TestData>;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor() {
     this.underlyingDataSource.data = [];
@@ -868,8 +841,8 @@ class MatTableWithPaginatorApp implements OnInit {
   dataSource = new MatTableDataSource<TestData>();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(MatTable, {static: true}) table: MatTable<TestData>;
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatTable) table: MatTable<TestData>;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor() {
     this.underlyingDataSource.data = [];
