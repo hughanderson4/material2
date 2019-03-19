@@ -11,7 +11,6 @@
 
   <!-- Disable animations while a current animation is running -->
   <div class="mat-sort-header-arrow"
-       *ngIf="_renderArrow()"
        [@arrowOpacity]="_getArrowViewState()"
        [@arrowPosition]="_getArrowViewState()"
        [@allowChildren]="_getArrowDirectionState()"
@@ -23,8 +22,5 @@
       <div class="mat-sort-header-pointer-right" [@rightPointer]="_getArrowDirectionState()"></div>
       <div class="mat-sort-header-pointer-middle"></div>
     </div>
-    <div class="mat-sort-header-counter">
-      {{ _getSortCounter() }}
-    </div>
-  </div>  
+  </div>
 </div>
