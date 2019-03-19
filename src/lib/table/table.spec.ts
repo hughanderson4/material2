@@ -10,8 +10,10 @@ import {
 } from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {BehaviorSubject, Observable} from 'rxjs';
+
 import {MatPaginator, MatPaginatorModule} from '../paginator/index';
-import {MatSort, MatMultiSort, MatSortHeader, MatSortModule} from '../sort/index';
+import {MatMultiSort, MatSort, MatSortHeader, MatSortModule} from '../sort/index';
+
 import {MatTableModule} from './index';
 import {MatTable} from './table';
 import {MatTableDataSource} from './table-data-source';

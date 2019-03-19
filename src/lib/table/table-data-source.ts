@@ -8,6 +8,8 @@
 
 import {_isNumberValue} from '@angular/cdk/coercion';
 import {DataSource} from '@angular/cdk/table';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import {MatMultiSort, MatSort, Sort} from '@angular/material/sort';
 import {
   BehaviorSubject,
   combineLatest,
@@ -16,8 +18,6 @@ import {
   of as observableOf,
   Subscription
 } from 'rxjs';
-import {MatPaginator, PageEvent} from '@angular/material/paginator';
-import {MatSort, MatMultiSort, Sort} from '@angular/material/sort';
 import {map} from 'rxjs/operators';
 
 /**
@@ -298,7 +298,9 @@ export class MatTableDataSource<T> extends DataSource<T> {
    */
   _updatePaginator(filteredDataLength: number) {
     Promise.resolve().then(() => {
-      if (!this.paginator) { return; }
+      if (!this.paginator) {
+        return;
+      }
 
       this.paginator.length = filteredDataLength;
 

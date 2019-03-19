@@ -20,4 +20,5 @@ import {CommonModule} from '@angular/common';
   declarations: [MatSort, MatMultiSort, MatSortHeader],
   providers: [MAT_SORT_HEADER_INTL_PROVIDER]
 })
-export class MatSortModule {}
+export class MatSortModule {
+}

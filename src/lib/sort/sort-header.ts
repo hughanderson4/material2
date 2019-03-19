@@ -11,17 +11,18 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Inject,
   Input,
   OnDestroy,
   OnInit,
   Optional,
   ViewEncapsulation,
-  Inject,
 } from '@angular/core';
 import {CanDisable, CanDisableCtor, mixinDisabled} from '@angular/material/core';
 import {merge, Subscription} from 'rxjs';
-import {MatSort, MatSortable} from './sort';
+
 import {MatMultiSort} from './multi-sort';
+import {MatSort, MatSortable} from './sort';
 import {matSortAnimations} from './sort-animations';
 import {SortDirection} from './sort-direction';
 import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
@@ -63,10 +64,11 @@ interface MatSortHeaderColumnDef {
  * Header display strategy that is different based on type of sort being used.
  */
 export interface SortHeaderStrategy {
-  isSorted(sortHeader: MatSort | MatMultiSort, id: string): boolean;
-  getDirection(sortHeader: MatSort | MatMultiSort, id: string): SortDirection;
-  getSortCounter(sortHeader: MatSort | MatMultiSort, id: string,
-    getSortCounter: ((position: number, count: number) => string)): string;
+  isSorted(sortHeader: MatSort|MatMultiSort, id: string): boolean;
+  getDirection(sortHeader: MatSort|MatMultiSort, id: string): SortDirection;
+  getSortCounter(
+      sortHeader: MatSort|MatMultiSort, id: string,
+      getSortCounter: ((position: number, count: number) => string)): string;
 }
 
 /**
@@ -150,15 +152,12 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
 
   private _sortHeaderStrategy: SortHeaderStrategy;
 
-  @Input()
-  getSortCounter: ((position: number, count: number) => string);
+  @Input() getSortCounter: ((position: number, count: number) => string);
 
-  constructor(public _intl: MatSortHeaderIntl,
-              changeDetectorRef: ChangeDetectorRef,
-              @Optional() public _simpleSort: MatSort,
-              @Optional() public _multiSort: MatMultiSort,
-              @Inject('MAT_SORT_HEADER_COLUMN_DEF') @Optional()
-                  public _columnDef: MatSortHeaderColumnDef) {
+  constructor(
+      public _intl: MatSortHeaderIntl, changeDetectorRef: ChangeDetectorRef,
+      @Optional() public _simpleSort: MatSort, @Optional() public _multiSort: MatMultiSort,
+      @Inject('MAT_SORT_HEADER_COLUMN_DEF') @Optional() public _columnDef: MatSortHeaderColumnDef) {
     // Note that we use a string token for the `_columnDef`, because the value is provided both by
     // `material/table` and `cdk/table` and we can't have the CDK depending on Material,
     // and we want to avoid having the sort header depending on the CDK table because
@@ -332,7 +331,7 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
 class SimpleSortStrategy implements SortHeaderStrategy {
   isSorted(sortHeader: MatSort, id: string) {
     return sortHeader.active == id &&
-          (sortHeader.direction === 'asc' || sortHeader.direction === 'desc');
+        (sortHeader.direction === 'asc' || sortHeader.direction === 'desc');
   }
 
   getDirection(sortHeader: MatSort): SortDirection {
@@ -350,15 +349,16 @@ class SimpleSortStrategy implements SortHeaderStrategy {
 class MultiSortStrategy implements SortHeaderStrategy {
   isSorted(sortHeader: MatMultiSort, id: string) {
     return sortHeader.active && sortHeader.active.indexOf(id) > -1 &&
-    (sortHeader.direction[id] === 'asc' || sortHeader.direction[id] === 'desc');
+        (sortHeader.direction[id] === 'asc' || sortHeader.direction[id] === 'desc');
   }
 
   getDirection(sortHeader: MatMultiSort, id: string): SortDirection {
     return sortHeader.direction[id];
   }
 
-  getSortCounter(sortHeader: MatMultiSort, id: string,
-    getSortCounter: ((position: number, count: number) => string)): string {
+  getSortCounter(
+      sortHeader: MatMultiSort, id: string,
+      getSortCounter: ((position: number, count: number) => string)): string {
     if (!getSortCounter || !sortHeader.active) {
       return '';
     }

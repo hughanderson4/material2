@@ -14,7 +14,7 @@ import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 })
 export class TableHttpExample implements OnInit {
   displayedColumns: string[] = ['created', 'state', 'number', 'title'];
-  exampleDatabase: ExampleHttpDao | null;
+  exampleDatabase: ExampleHttpDao|null;
   data: GithubIssue[] = [];
 
   resultsLength = 0;
