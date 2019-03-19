@@ -136,10 +136,11 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
   set disableClear(v) { this._disableClear = coerceBooleanProperty(v); }
   private _disableClear: boolean;
 
-  constructor(
-      public _intl: MatSortHeaderIntl, changeDetectorRef: ChangeDetectorRef,
-      @Optional() public _sort: MatSort,
-      @Inject('MAT_SORT_HEADER_COLUMN_DEF') @Optional() public _columnDef: MatSortHeaderColumnDef) {
+  constructor(public _intl: MatSortHeaderIntl,
+              changeDetectorRef: ChangeDetectorRef,
+              @Optional() public _sort: MatSort,
+              @Inject('MAT_SORT_HEADER_COLUMN_DEF') @Optional()
+                  public _columnDef: MatSortHeaderColumnDef) {
     // Note that we use a string token for the `_columnDef`, because the value is provided both by
     // `material/table` and `cdk/table` and we can't have the CDK depending on Material,
     // and we want to avoid having the sort header depending on the CDK table because
@@ -268,8 +269,9 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
    * only be changed once the arrow displays again (hint or activation).
    */
   _updateArrowDirection() {
-    this._arrowDirection =
-        this._isSorted() ? this._sort.direction : (this.start || this._sort.start);
+    this._arrowDirection = this._isSorted() ?
+        this._sort.direction :
+        (this.start || this._sort.start);
   }
 
   _isDisabled() {

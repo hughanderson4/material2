@@ -38,4 +38,3 @@ export const MAT_SORT_HEADER_INTL_PROVIDER = {
   deps: [[new Optional(), new SkipSelf(), MatSortHeaderIntl]],
   useFactory: MAT_SORT_HEADER_INTL_PROVIDER_FACTORY
 };
-
