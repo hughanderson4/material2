@@ -18,7 +18,7 @@
   }
 
   mat-row, mat-header-row, mat-footer-row,
-  th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+  .mat-header-cell, .mat-cell, .mat-footer-cell {
     border-bottom-color: mat-color($foreground, divider);
   }
 
